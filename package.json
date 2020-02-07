@@ -2,9 +2,11 @@
   "name": "the-local-server",
   "version": "0.0.0",
   "scripts": {
-    "build:dev": "webpack --config webpack.config.js",
-    "start:dev": "node dist/server",
-    "start": "node dist/server"
+    "start": "node dist/server",
+    "build": "webpack --config webpack.config.js",
+    "build:prod": "webpack -p --config webpack.config.js",
+    "heroku-postbuild": "npm run build:prod" ,
+    "logs": "heroku logs --app goodtimes-server --tail"
   },
   "_moduleAliases": {
     "@shared": "dist/shared"
