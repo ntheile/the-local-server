@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "build:dev": "webpack --config webpack.config.js",
-    "start:dev": "node dist/server"
+    "start:dev": "node dist/server",
+    "start": "node dist/server"
   },
   "_moduleAliases": {
     "@shared": "dist/shared",

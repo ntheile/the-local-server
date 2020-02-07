@@ -9,6 +9,10 @@ import { setup } from 'radiks-server';
 import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
 import { PlaceInfoController } from './api/PlaceInfoController'
 import { createKeyChain, loadServerSession } from './api/Keychain';
+const EventEmitter = require('wolfy87-eventemitter');
+import { PlaceController } from './api/PlaceController';
+const makeApiController = require('./api/ApiController');
+const { STREAM_CRAWL_EVENT } = require('radiks-server/app/lib/constants');
 
 // Init express
 const app = express();
@@ -43,17 +47,41 @@ app.get('/manifest.json', (req, res) => {
 });
 
 setup().then( async ( RadiksController: any ) => {
+
+    let server = require('http').Server(app);
+    const io = require('socket.io')(server);
+    io.on('connection', function (socket: any) {
+      console.log('new connection');
+  
+      // join room
+      socket.on('join', (room: any) => {
+        PlaceController(io, socket, room, RadiksController)
+      });
+  
+      // // broadcast room messages
+      // socket.on('message', ({room, message })  => {
+      //   console.log('message', message);
+      //   io.in(room).emit('message', message);
+      // });
+    });
+
    
     app.use('/radiks', RadiksController);
-    app.use('/placeinfo', PlaceInfoController(RadiksController.DB));
-    
+    app.use('/api', makeApiController(RadiksController.DB));
+    app.use('/placeinfo', PlaceInfoController(RadiksController.DB));    
     let keychain = await createKeyChain(); // or get seed from .env
     let session = await loadServerSession(keychain);
     console.log('keychain', keychain);
     console.log('session', session);
 
+    RadiksController.emitter.on(STREAM_CRAWL_EVENT, ([attrs]: any) => {
+        // notifier(RadiksController.DB, attrs);
+        if (attrs.geohash){
+          let room = attrs.geohash;
+          io.in(room).emit('message', attrs);
+        }
+    });
    
-
     app.get('/api/test/:id', async (req: Request, res: Response) => {    
         const { id } = req.params; 
         return res.status(OK).json({a:  id});

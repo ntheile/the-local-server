@@ -85,7 +85,7 @@ export function trackEvent(event: string, properties: Object) {
 
   // Prevent noisy stats from development testing behavior
   // TODO: process.env.NODE_ENV, when that's fixed. Use this for now.
-  if (window.location.port === '3000') {
+  if (window.location.port === '5000') {
     console.info(`Event track fired: '${event}'`)
     return
   }
