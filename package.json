@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "start": "node dist/server",
-    "build": "webpack -p --config webpack.config.js --progress",
-    "build:dev": "webpack --config webpack.config.js --progress",
+    "build:dev": "webpack -p --config webpack.config.js --progress",
+    "build:prod": "webpack --config webpack.config.js --progress",
     "logs": "heroku logs --app goodtimes-server --tail"
   },
   "_moduleAliases": {
