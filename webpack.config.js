@@ -11,7 +11,7 @@ module.exports = {
     watch: true,
     // Is needed to have in compiled output imports Node.JS can understand. Quick search gives you more info
     target: 'node',
-    devtool: 'cheap-source-map',
+    devtool: 'inline-source-map',
     // Prevents warnings from TypeScript compiler
     externals: [
         nodeExternals({

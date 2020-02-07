@@ -78,6 +78,7 @@ setup().then( async ( RadiksController: any ) => {
     console.log('session', session);
 
     RadiksController.emitter.on(STREAM_CRAWL_EVENT, ([attrs]: any) => {
+        console.log('emmiting message');
         // notifier(RadiksController.DB, attrs);
         if (attrs.geohash){
           let room = attrs.geohash;
@@ -92,10 +93,10 @@ setup().then( async ( RadiksController: any ) => {
         PlaceController(io, socket, room, RadiksController)
       });
       // // broadcast room messages
-      // socket.on('message', ({room, message })  => {
-      //   console.log('message', message);
-      //   io.in(room).emit('message', message);
-      // });
+      socket.on('message', ({room, message}: any)  => {
+        console.log('message', message);
+        io.in(room).emit('message', message);
+      });
     });
    
     // app.get('/api/test/:id', async (req: Request, res: Response) => {    
