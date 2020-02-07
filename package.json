@@ -5,7 +5,6 @@
     "start": "node dist/server",
     "build": "webpack -p --config webpack.config.js --progress",
     "build:dev": "webpack --config webpack.config.js --progress",
-    "heroku-postbuild": "npm run build",
     "logs": "heroku logs --app goodtimes-server --tail"
   },
   "_moduleAliases": {
