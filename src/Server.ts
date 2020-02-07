@@ -14,8 +14,10 @@ import { PlaceController } from './api/PlaceController';
 const makeApiController = require('./api/ApiController');
 const { STREAM_CRAWL_EVENT } = require('radiks-server/app/lib/constants');
 
-// Init express
+// Init express and socket.io
 const app = express();
+let server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 
 // Add middleware/settings/routes to express.
@@ -46,24 +48,12 @@ app.get('/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'static', 'manifest.json'));
 });
 
+
 setup().then( async ( RadiksController: any ) => {
 
-    let server = require('http').Server(app);
-    const io = require('socket.io')(server);
-    io.on('connection', function (socket: any) {
-      console.log('new connection');
-  
-      // join room
-      socket.on('join', (room: any) => {
-        PlaceController(io, socket, room, RadiksController)
-      });
-  
-      // // broadcast room messages
-      // socket.on('message', ({room, message })  => {
-      //   console.log('message', message);
-      //   io.in(room).emit('message', message);
-      // });
-    });
+    
+    
+   
 
    
     app.use('/radiks', RadiksController);
@@ -81,11 +71,26 @@ setup().then( async ( RadiksController: any ) => {
           io.in(room).emit('message', attrs);
         }
     });
-   
-    app.get('/api/test/:id', async (req: Request, res: Response) => {    
-        const { id } = req.params; 
-        return res.status(OK).json({a:  id});
+
+    io.on('connection', function (socket: any) {
+      console.log('new connection');
+  
+      // join room
+      socket.on('join', (room: any) => {
+        PlaceController(io, socket, room, RadiksController)
+      });
+  
+      // // broadcast room messages
+      // socket.on('message', ({room, message })  => {
+      //   console.log('message', message);
+      //   io.in(room).emit('message', message);
+      // });
     });
+   
+    // app.get('/api/test/:id', async (req: Request, res: Response) => {    
+    //     const { id } = req.params; 
+    //     return res.status(OK).json({a:  id});
+    // });
 
 });
 
