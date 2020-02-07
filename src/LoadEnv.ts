@@ -12,7 +12,7 @@ const options = commandLineArgs([
 ]);
 
 // Set the env file
-try{
+if(process.env.NODE_ENV !== "production"){
     const result2 = dotenv.config({
         path: `./env/${options.env}.env`,
     });
@@ -20,7 +20,6 @@ try{
         throw result2.error;
     }
 }
-catch(e){
-    console.log(`cannot find ./env/${options.env}.env`)
-}
+
+
 
