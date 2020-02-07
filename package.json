@@ -3,12 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build:dev": "webpack --config webpack.config.js",
-    "start:dev": "node dist/server",
-    "buildold": "node ./util/build.js",
-    "lint": "tslint --project \"tsconfig.json\"",
-    "start": "node -r module-alias/register ./dist",
-    "start:dev:old": "nodemon --config nodemon.json",
-    "test": "nodemon --config nodemon.test.json"
+    "start:dev": "node dist/server"
   },
   "_moduleAliases": {
     "@shared": "dist/shared",
@@ -17,6 +12,7 @@
   "dependencies": {
     "@awaitjs/express": "^0.4.0",
     "@types/latlon-geohash": "^2.0.0",
+    "@types/prop-types": "^15.7.3",
     "command-line-args": "^5.1.1",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
@@ -25,8 +21,23 @@
     "latlon-geohash": "^2.0.0",
     "module-alias": "^2.2.2",
     "morgan": "^1.9.1",
+    "prop-types": "^15.7.2",
+    "radiks": "^0.2.2-beta.1",
     "radiks-server": "^0.3.0-beta.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "blockstack": "19.0.0-alpha.3",
+    "wolfy87-eventemitter": "^5.2.8",
+    "hash-handler": "^2.0.1",
+    "bip32": "^2.0.4",
+    "bip32-utils": "^0.11.1",
+    "bip39": "^3.0.2",
+    "bitcoinjs-lib": "^3.2.0",
+    "localstorage-polyfill": "^1.0.1",
+    "node-fetch": "^2.6.0",
+    "lodash": "^4.17.11",
+    "moment": "^2.22.2",
+    "window": "^4.2.6",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "@types/command-line-args": "^5.0.0",

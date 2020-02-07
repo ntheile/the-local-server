@@ -8,12 +8,10 @@ import BaseRouter from './routes';
 import { setup } from 'radiks-server';
 import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
 import { PlaceInfoController } from './api/PlaceInfoController'
-
+import { createKeyChain, loadServerSession } from './api/Keychain';
 
 // Init express
 const app = express();
-
-
 
 
 // Add middleware/settings/routes to express.
@@ -44,17 +42,25 @@ app.get('/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'static', 'manifest.json'));
 });
 
-setup().then( ( RadiksController: any ) => {
+setup().then( async ( RadiksController: any ) => {
+   
     app.use('/radiks', RadiksController);
     app.use('/placeinfo', PlaceInfoController(RadiksController.DB));
+    
+    let keychain = await createKeyChain(); // or get seed from .env
+    let session = await loadServerSession(keychain);
+    console.log('keychain', keychain);
+    console.log('session', session);
+
+   
+
+    app.get('/api/test/:id', async (req: Request, res: Response) => {    
+        const { id } = req.params; 
+        return res.status(OK).json({a:  id});
+    });
+
 });
 
-
-app.get('/api/test/:id', async (req: Request, res: Response) => {    
-    const { id } = req.params; 
-    return res.status(OK).json({a:  id});
-});
-
-
+  
 // Export express instance
 export default app;
