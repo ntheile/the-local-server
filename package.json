@@ -7,8 +7,7 @@
     "start": "node dist/server"
   },
   "_moduleAliases": {
-    "@shared": "dist/shared",
-    "@server": "dist/Server"
+    "@shared": "dist/shared"
   },
   "dependencies": {
     "@awaitjs/express": "^0.4.0",

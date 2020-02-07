@@ -16,9 +16,6 @@
       "@shared": [
         "src/shared"
       ],
-      "@server": [
-        "src/Server"
-      ]
     },
     "types": [
       "node"

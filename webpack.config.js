@@ -31,7 +31,6 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
         alias: {
-            "@server": path.resolve(__dirname, 'src/Server'),
             "@shared": path.resolve(__dirname, 'src/shared/'),
             "@utils": path.resolve(__dirname, 'src/utils/'),
         }
