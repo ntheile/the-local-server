@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "start": "node dist/server",
+    "build": "webpack -p --config webpack.prod.js --progress",
     "build:dev": "webpack --config webpack.config.js --progress",
-    "build:prod": "webpack -p --config webpack.config.js --progress",
     "logs": "heroku logs --app goodtimes-server --tail"
   },
   "_moduleAliases": {
@@ -67,6 +67,7 @@
     "webpack-cli": "^3.3.10",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-hot-middleware": "^2.25.0",
+    "webpack-merge": "^4.2.2",
     "webpack-node-externals": "^1.7.2"
   }
 }
