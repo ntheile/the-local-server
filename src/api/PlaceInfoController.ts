@@ -45,8 +45,14 @@ export const PlaceInfoController = (db: any) => {
         //         count: headcount
         //     });
         // } catch (e) {
-            res.json({ error: 'e' });
+            //res.json({ error: 'e' });
         //}
+
+
+        res.json({
+            geohash: 'a',
+            count: 1
+        });
 
     });
 
