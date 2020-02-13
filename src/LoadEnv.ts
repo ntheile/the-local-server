@@ -1,15 +1,22 @@
 import dotenv from 'dotenv';
 import commandLineArgs from 'command-line-args';
 
+
 // Setup command line options
-const options = commandLineArgs([
-    {
-        name: 'env',
-        alias: 'e',
-        defaultValue: 'production',
-        type: String,
-    },
-]);
+let options: any = {};
+try{
+    options = commandLineArgs([
+        {
+            name: 'env',
+            alias: 'e',
+            defaultValue: 'production',
+            type: String,
+        },
+    ]);
+} catch(e) {
+    options.env = "test";
+}
+
 
 // Set the env file
 if(process.env.NODE_ENV !== "production"){

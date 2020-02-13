@@ -26,6 +26,7 @@ import { PlaceController } from './api/PlaceController';
 const makeApiController = require('./api/ApiController');
 const { STREAM_CRAWL_EVENT } = require('radiks-server/app/lib/constants');
 import http from 'http';
+import mongoSetup from './mongoSetup';
 
 // Init express and socket.io
 const app = express();
@@ -70,6 +71,7 @@ setup().then( async ( RadiksController: any ) => {
    
     const io = require('socket.io')(server);
     app.use('/radiks', RadiksController);
+    mongoSetup(RadiksController)
     app.use('/api', makeApiController(RadiksController.DB));
     app.use('/placeinfo', PlaceInfoController(RadiksController.DB));    
     let keychain = await createKeyChain(); // or get seed from .env
@@ -94,7 +96,7 @@ setup().then( async ( RadiksController: any ) => {
       });
       // // broadcast room messages
       socket.on('message', ({room, message}: any)  => {
-        console.log('message', message);
+        message.radiksType = "Joiner";
         io.in(room).emit('message', message);
       });
     });
