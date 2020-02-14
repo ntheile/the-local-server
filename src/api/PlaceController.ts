@@ -1,4 +1,7 @@
 
+import { GenGroupKeyPutCentral, inviteMember } from './../utils/group';
+
+
 // called from a client websocket
 // https://stackoverflow.com/questions/10058226/send-response-to-all-clients-except-sender
 export async function PlaceController(io: any, socket: any, room: any, RadiksController: any) {
@@ -29,25 +32,26 @@ export async function PlaceController(io: any, socket: any, room: any, RadiksCon
             // create room session
             // 1) create a new Group membership for the room that will last 1 day
             // createRadiksGroup
-            // session = await GenGroupKeyPutCentral(placeId, userToInvite);
+            
+            session = await GenGroupKeyPutCentral(placeId);
+            // 2) Invite the requesting users public key to the room.
+            // inviteMemberIfNotExists(placeId, userToInvite);
+            // 3) send request back to user to accept 
+            // client accepts like this
 
           }
 
           socket.emit('message', session);
 
-          // 2) Invite the requesting users public key to the room.
-          // inviteMemberIfNotExists(placeId, null);
-          // 3) send request back to user to accept 
-          // client accepts like this
-
+      
           resolve(session);
         });
       });
     }
 
     function inviteMemberIfNotExists(placeId: any, userToInvite: any) {
-      // @todo
-      // inviteMember(placeId, userToInvite);
+      
+      inviteMember(placeId, userToInvite);
     }
 
   });

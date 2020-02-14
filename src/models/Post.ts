@@ -3,6 +3,7 @@ import Model from 'radiks/lib/model';
 import { number, any, string } from 'prop-types';
 import Comment from './Comment';
 import { Attrs } from 'radiks/src/types';
+import { ACL } from './ACL';
 
 export let posts: any;
 
@@ -100,4 +101,6 @@ export interface IPost extends Attrs {
   hashtagColor: string;
   time: string;
   pullRight: boolean;
+  acl: ACL // access control level
 }
+
