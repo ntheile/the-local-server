@@ -9,7 +9,6 @@ const fetch = require('node-fetch');
 global.window = window; // for radiks to work
 // @ts-ignore
 global.document = window.document; // for nextjs client side dom to work
-
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import { Request, Response, Router } from 'express';
@@ -18,18 +17,20 @@ import path from 'path';
 import BaseRouter from './routes';
 // @ts-ignore
 import { setup } from 'radiks-server';
-import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
+import { OK } from 'http-status-codes';
 import { PlaceInfoController } from './api/PlaceInfoController'
 import { createKeyChain, loadServerSession } from './api/Keychain';
-const EventEmitter = require('wolfy87-eventemitter');
 import { PlaceController } from './api/PlaceController';
 const makeApiController = require('./api/ApiController');
 const { STREAM_CRAWL_EVENT } = require('radiks-server/app/lib/constants');
-import http from 'http';
 import mongoSetup from './mongoSetup';
+import { PostsController } from './api/PostsController';
+import { PeopleController } from './api/PeopleController';
+
 
 // Init express and socket.io
 const app = express();
+
 
 // Add middleware/settings/routes to express.
 app.use(logger('dev'));
@@ -38,13 +39,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use('/api', BaseRouter);
 
-/**
- * Point express to the 'views' directory. If you're using a
- * single-page-application framework like react or angular
- * which has its own development server, you might want to
- * configure this to only serve the index file while in
- * production mode.
- */
+
+// Pre server setup
 const viewsDir = path.join(__dirname, 'views');
 app.set('views', viewsDir);
 const staticDir = path.join(__dirname, 'public');
@@ -66,19 +62,37 @@ const server = app.listen(port, () => {
     console.log('Express server started on port: ' + port);
 });
 
-// Setup the websocket and Radiks
+
+// Setup the server
 setup().then( async ( RadiksController: any ) => {
    
-    const io = require('socket.io')(server);
-    app.use('/radiks', RadiksController);
+
+    // setup database indexes
     mongoSetup(RadiksController)
+    
+
+    // setup Routes
+    app.use('/radiks', RadiksController);
     app.use('/api', makeApiController(RadiksController.DB));
     app.use('/placeinfo', PlaceInfoController(RadiksController.DB));    
+    app.use('/api/v1/posts', PostsController(RadiksController.DB));
+    app.use('/api/v1/people', PeopleController(RadiksController.DB));
+
+    // test route
+    // app.get('/api/test/:id', async (req: Request, res: Response) => {    
+    //     const { id } = req.params; 
+    //     return res.status(OK).json({a:  id});
+    // });
+    
+
+    // setup crypto
     let keychain = await createKeyChain(); // or get seed from .env
     let session = await loadServerSession(keychain);
     console.log('keychain', keychain);
     console.log('session', session);
 
+
+    // setup event emmitters
     RadiksController.emitter.on(STREAM_CRAWL_EVENT, ([attrs]: any) => {
         console.log('emmiting message');
         // notifier(RadiksController.DB, attrs);
@@ -88,6 +102,9 @@ setup().then( async ( RadiksController: any ) => {
         }
     });
 
+
+    // setup Websockets
+    const io = require('socket.io')(server);
     io.on('connection', function (socket: any) {
       console.log('new connection');
       // join room
@@ -101,12 +118,7 @@ setup().then( async ( RadiksController: any ) => {
       });
     });
    
-    // app.get('/api/test/:id', async (req: Request, res: Response) => {    
-    //     const { id } = req.params; 
-    //     return res.status(OK).json({a:  id});
-    // });
-
+    
 });
-
 
 export default app;

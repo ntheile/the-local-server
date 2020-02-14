@@ -1,10 +1,11 @@
 import "jasmine";
 // @ts-ignore
 import { setup } from 'radiks-server';
+import { Db } from 'mongodb';
 
 describe('Mongo tests', () => {
 
-    let db: any = null;
+    let db: Db;
 
     beforeAll((done) => {
         setup().then(async (RadiksController: any) => {
