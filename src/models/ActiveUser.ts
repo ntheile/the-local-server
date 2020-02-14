@@ -1,6 +1,8 @@
-import Model from 'radiks/src/model';
+// @ts-ignore
+import Model from 'radiks/lib/model';
 import { Attrs } from 'radiks/src/types';
 import { ACL, acl } from './ACL';
+
 
 export class ActiveUser extends Model {
   static className = 'ActiveUser';
