@@ -12,9 +12,10 @@ import * as crypto from 'crypto'
 import * as blockstack from 'blockstack';
 // @ts-ignore
 import { configure } from 'radiks';
-const bitcoinjs = require('bitcoinjs-lib')
+const bitcoinjs = require('bitcoinjs-lib');
 import 'localstorage-polyfill';
 // @ts-ignore
+import { makeAuthResponse } from 'blockstack/lib/auth/index';
 
 
 export const initWallet = async () => {
@@ -54,13 +55,14 @@ export function makeUserSession(appPrivateKey: string, appPublicKey: string, use
         scopes,
         appUrl
     )
-
-
+    
+    let authResponseToken = makeAuthResponse(appPrivateKey, profileJSON, username, null);
+      
     const userData: UserData = {
         username: username,
         decentralizedID: 'did:btc-addr:' + appPublicKey,
         appPrivateKey: appPrivateKey,
-        authResponseToken: '',
+        authResponseToken: authResponseToken,
         hubUrl: hubUrl,
         identityAddress: appPublicKey,
         profile: profileJSON,

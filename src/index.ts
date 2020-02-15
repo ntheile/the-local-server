@@ -108,8 +108,9 @@ setup().then( async ( RadiksController: any ) => {
     io.on('connection', function (socket: any) {
       console.log('new connection');
       // join room
-      socket.on('join', (room: any) => {
-        PlaceController(io, socket, room, RadiksController)
+      socket.on('join', (data: any) => {
+        const {room, authToken} = data;
+        PlaceController(io, socket, room, RadiksController, authToken)
       });
       // // broadcast room messages
       socket.on('message', ({room, message}: any)  => {
