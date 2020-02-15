@@ -20,12 +20,11 @@ export async function PlaceController(io: any, socket: any, room: any, RadiksCon
       let roomSession: any = await createRoomSession(room, RadiksController, socket);
 
       // 2) Invite the requesting users public key to the room.
-      // inviteMember(room, userId);
+      let invitation = await inviteMember(roomSession._id, userId);
   
-
       // 3) send request back to user to accept 
-      roomSession.radiksType = "RoomInvitation";
-      socket.emit('message', roomSession);
+      // roomSession.radiksType = "RoomInvitation";
+      socket.emit('message', invitation);
   
       // 4) emit message to everybody in the room that you have a new joiner
       // io.in(room).emit('message', {radiksType: 'NewJoiner', 'userProfile': {location: [1,2], distance: 1000, image: '', userName: userId } });  
@@ -45,12 +44,11 @@ export async function createRoomSession(room: any, RadiksController: any, socket
   let placeId = room;
   return new Promise((resolve, reject) => {
     // Search for Room
-    let placeKey = `place_${placeId}`;
-    RadiksController.centralCollection.find({ "_id": { $regex: placeKey } }).toArray(async (error: any, item: any) => {
+    RadiksController.centralCollection.find({ "_id": placeId }).toArray(async (error: any, item: any) => {
       //1) Create Room if not exsists
       if (item.length > 0) {
         // grab session if it exists
-        session = item;
+        session = item[0].group;
       } else {
         // create room 
         session = await genGroupKeyPutCentral(placeId);

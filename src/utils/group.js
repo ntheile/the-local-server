@@ -109,7 +109,7 @@ function rando() {
 }
 function GenGroupKeyPutCentral(placeId) {
     return __awaiter(this, void 0, void 0, function* () {
-        const key = "place_" + placeId;
+        const key = placeId;
         console.log('creating place ' + placeId);
         let group = yield createRadiksGroup(key);
         const value = { group: group };

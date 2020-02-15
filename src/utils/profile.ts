@@ -106,7 +106,7 @@ export function rando() {
 
 export const createBlockchainIdentity = async (
     keychain: any, 
-    username:string =  "good" + rando() + '.id.blockstack',  
+    username:string =  process.env.USER_ID || "good" + rando() + '.id.blockstack',  
     avatarUrl: string = 'https://gaia.blockstack.org/hub/17xxYBCvxwrwKtAna4bubsxGCMCcVNAgyw/avatar-0',  
     identitiesToGenerate: number = 2
 ) => {

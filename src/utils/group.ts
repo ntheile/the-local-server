@@ -4,6 +4,10 @@ import { UserGroup, GroupInvitation, Central } from 'radiks';
 import Message from './../models/Message';
 import EncryptedMessage from './../models/EncryptedMessage';
 declare let window: any;
+const { getDB } = require('radiks-server');
+import { Db } from 'mongodb';
+import 'localstorage-polyfill';
+
 
 export async function createRadiksGroup(groupName: string){
     const group = new UserGroup({ name: groupName });
@@ -19,12 +23,14 @@ export async function createRadiksGroup(groupName: string){
 }
 
 export async function inviteMember(groupId: string, userToInvite: string){
-    console.log(`invited ${userToInvite} to group: ${groupId}`)
     let group = await UserGroup.findById(groupId);
     const usernameToInvite = userToInvite;
+    group.privateKey = await getGroupKeyFromCache(groupId);
     const invitation = await group.makeGroupMembership(usernameToInvite);
-    // console.log('invitation._id', invitation._id); // the ID used to later activate an invitation
-    return invitation;
+    let inviteId = invitation._id;
+    console.log('invite id => ', inviteId); // the ID used to later activate an invitation
+    // update the members in central store
+    copyGroupKeyDataToCentral(groupId);
 }
 
 
@@ -47,14 +53,104 @@ function rando(){
 
    
 export async function genGroupKeyPutCentral(placeId: any){
-    const key = "place_" + placeId;
+    const key = placeId;
     console.log('creating place ' + placeId);
     let group = await createRadiksGroup(key);
     const value = { group: group };
-    await Central.save(key, value);
-    const result = await Central.get(key);
+    //await Central.save(key, value);
+    //const result = await Central.get(key);
+    const mongo: Db = await getDB(process.env.MONGODB_URI);    
+    let result = await mongo.collection('radiks-central-data').update(
+        {
+            _id: key
+        }, 
+        {
+            _id: key,
+            group: group
+        },
+        {
+            upsert: true
+        }
+    );
+
     // console.log('created central group in GenGroupKeyPutCentral', result);
+    backupGroupMemberships();
     return group;
+}
+
+
+export async function copyGroupKeyDataToCentral(groupId: any){
+    let group = await UserGroup.findById(groupId);
+    const mongo: Db = await getDB(process.env.MONGODB_URI);
+    let groupData: any = await mongo.collection('radiks-central-data').find( { 'group._id': groupId }).toArray();
+    if (groupData.length < 1){
+        console.log(`group with is  ${groupId} does not exist in central store`);
+        return null;
+    }
+    let key = groupData[0]._id;
+    group.privateKey = await getGroupKeyFromCache(groupId);
+    // let result = await Central.save(key, value);
+    // updateCentral
+    let result = await mongo.collection('radiks-central-data').update(
+        {
+            _id: key
+        }, 
+        {
+            _id: key,
+            group: group
+        },
+        {
+            upsert: true
+        }
+    );
+
+    return result;
+}
+
+export async function backupGroupMemberships(){
+    let groupMembership: any = localStorage.getItem('GROUP_MEMBERSHIPS_STORAGE_KEY');    
+    const mongo: Db = await getDB(process.env.MONGODB_URI);
+    let result = null;
+    if (groupMembership){
+        result = await mongo.collection('radiks-central-data').update(
+            {
+                _id: "GROUP_MEMBERSHIPS_STORAGE_KEY"
+            }, 
+            {  
+                _id: "GROUP_MEMBERSHIPS_STORAGE_KEY",
+                keys: groupMembership,
+                keysObject: JSON.parse(groupMembership)
+            },
+            {
+                upsert: true
+            }
+        );
+    }
+    return result;
+}
+
+export async function loadGroupMemberShipsFromMongoToLocalStorage(){
+    const mongo: Db = await getDB(process.env.MONGODB_URI);
+    let result = await mongo.collection('radiks-central-data').findOne( {  
+        _id: "GROUP_MEMBERSHIPS_STORAGE_KEY"
+    });
+    if (result){
+        let groupMembership = localStorage.setItem('GROUP_MEMBERSHIPS_STORAGE_KEY', result.keys);    
+        return groupMembership;
+    } else {
+        return null;
+    }
+    
+}
+
+export async function getGroupKeyFromCache(groupId: string){
+    const mongo: Db = await getDB(process.env.MONGODB_URI);
+    let groups = await mongo.collection('radiks-central-data')
+        .find({ "group._id": groupId })
+        .project({"group.privateKey": 1})
+        .toArray();
+    let key = groups[0].group.privateKey;
+    return key;
 }
 
 

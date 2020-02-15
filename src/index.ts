@@ -2,7 +2,7 @@ import './LoadEnv'; // Must be the first import
 //import { logger } from '@shared';
 import 'localstorage-polyfill';
 const Window = require('window');
-const window = new Window();
+let window = new Window();
 import 'localstorage-polyfill';
 const fetch = require('node-fetch');
 // @ts-ignore

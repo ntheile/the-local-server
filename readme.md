@@ -19,3 +19,8 @@ RADIKS_API_SERVER=http://localhost:5000
 SEED=your own twelve word seed phrase mnemonic following bitcoin bip39 
 ```
 4. `npm run start`
+
+
+geokeys
+=======
+group keys for a geohash/geofence/lat-lng-radius

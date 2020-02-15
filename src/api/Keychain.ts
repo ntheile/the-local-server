@@ -14,7 +14,7 @@ const {
 } = require('blockstack/lib/auth/authVerification');
 // @ts-ignore
 import { decodeToken, TokenVerifier } from 'jsontokens';
-
+import { loadGroupMemberShipsFromMongoToLocalStorage } from './../utils/group';
 
 export async function createKeyChain() {
   let seed = process.env.SEED;
@@ -33,7 +33,9 @@ export async function loadServerSession(keychain: any) {
   await configureRadiks(userSession);
   //console.log('config radiks sesh');
   let blockstackUser = await User.createWithCurrentUser();
+  let groupMemberships = await loadGroupMemberShipsFromMongoToLocalStorage();
   // console.log('blockstackUser', blockstackUser)
+  (window as any).session = blockstackUser;
 
   const radiksBatchAccount = {
     backupPhrase: keychain.backupPhrase,

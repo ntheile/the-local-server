@@ -4,7 +4,7 @@ export interface ACL {
   distance: number;
   readers: Array<any>; // ['nicktee.id', 'jason.id'] = only specific users || ['*'] = global to geospatial radius || [] = private to you
   expires: number; 
-  keyId: string;
+  geohash: string;
 }
   
 export let acl: ACL = {
@@ -12,5 +12,5 @@ export let acl: ACL = {
   location : [43, 12],
   readers: ['*'],
   expires: 123245,
-  keyId: 'good45439.id.blockstack-place_a'
+  geohash: 'a'
 }
