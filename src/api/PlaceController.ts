@@ -20,11 +20,13 @@ export async function PlaceController(io: any, socket: any, room: any, RadiksCon
       let roomSession: any = await createRoomSession(room, RadiksController, socket);
 
       // 2) Invite the requesting users public key to the room.
-      let invitation = await inviteMember(roomSession._id, userId);
+      let inviteId = await inviteMember(roomSession._id, userId);
   
       // 3) send request back to user to accept 
-      // roomSession.radiksType = "RoomInvitation";
-      socket.emit('message', invitation);
+      if (inviteId){
+        socket.emit('message', {radiksType: 'GroupInvitation', inviteId: inviteId});
+      }
+      
   
       // 4) emit message to everybody in the room that you have a new joiner
       // io.in(room).emit('message', {radiksType: 'NewJoiner', 'userProfile': {location: [1,2], distance: 1000, image: '', userName: userId } });  

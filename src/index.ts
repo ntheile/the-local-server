@@ -26,7 +26,7 @@ const { STREAM_CRAWL_EVENT } = require('radiks-server/app/lib/constants');
 import mongoSetup from './mongoSetup';
 import { PostsController } from './api/PostsController';
 import { PeopleController } from './api/PeopleController';
-
+import { loadGroupMemberShipsFromMongoToLocalStorage  } from './utils/group';
 
 // Init express and socket.io
 const app = express();
@@ -86,6 +86,8 @@ setup().then( async ( RadiksController: any ) => {
     
 
     // setup crypto
+    let groupMemberships = await loadGroupMemberShipsFromMongoToLocalStorage();
+    console.log("GROUP_MEMBERSHIPS_STORAGE_KEY", localStorage.getItem('GROUP_MEMBERSHIPS_STORAGE_KEY') );
     let keychain = await createKeyChain(); // or get seed from .env
     let session = await loadServerSession(keychain);
     console.log('keychain', keychain);

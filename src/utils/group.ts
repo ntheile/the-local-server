@@ -1,6 +1,4 @@
-// @ts-ignore
-import { UserGroup, GroupInvitation, Central } from 'radiks';
-// @ts-ignore
+import { UserGroup, GroupInvitation } from 'radiks';
 import Message from './../models/Message';
 import EncryptedMessage from './../models/EncryptedMessage';
 declare let window: any;
@@ -11,7 +9,7 @@ import 'localstorage-polyfill';
 
 export async function createRadiksGroup(groupName: string){
     const group = new UserGroup({ name: groupName });
-    let groupResp = null;
+    let groupResp: any = null;
     try{
         groupResp =  await group.create();
     } catch(e) {
@@ -23,19 +21,20 @@ export async function createRadiksGroup(groupName: string){
 }
 
 export async function inviteMember(groupId: string, userToInvite: string){
-    let group = await UserGroup.findById(groupId);
+    let group: any = await UserGroup.findById(groupId);
     const usernameToInvite = userToInvite;
     group.privateKey = await getGroupKeyFromCache(groupId);
     const invitation = await group.makeGroupMembership(usernameToInvite);
     let inviteId = invitation._id;
     console.log('invite id => ', inviteId); // the ID used to later activate an invitation
     // update the members in central store
-    copyGroupKeyDataToCentral(groupId);
+    await copyGroupKeyDataToCentral(groupId);
+    return inviteId;
 }
 
 
 export async function acceptInvitation(myInvitationID: string){
-    const invitation  = await GroupInvitation.findById(myInvitationID);
+    const invitation: any  = await GroupInvitation.findById(myInvitationID);
     await invitation.activate();
     // console.log(`Accepted Invitation ${myInvitationID}` );
     return invitation;
@@ -80,7 +79,7 @@ export async function genGroupKeyPutCentral(placeId: any){
 
 
 export async function copyGroupKeyDataToCentral(groupId: any){
-    let group = await UserGroup.findById(groupId);
+    let group: any = await UserGroup.findById(groupId);
     const mongo: Db = await getDB(process.env.MONGODB_URI);
     let groupData: any = await mongo.collection('radiks-central-data').find( { 'group._id': groupId }).toArray();
     if (groupData.length < 1){
@@ -110,7 +109,7 @@ export async function copyGroupKeyDataToCentral(groupId: any){
 export async function backupGroupMemberships(){
     let groupMembership: any = localStorage.getItem('GROUP_MEMBERSHIPS_STORAGE_KEY');    
     const mongo: Db = await getDB(process.env.MONGODB_URI);
-    let result = null;
+    let result:any = null;
     if (groupMembership){
         result = await mongo.collection('radiks-central-data').update(
             {
