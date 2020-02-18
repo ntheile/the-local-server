@@ -6,7 +6,8 @@
     "build": "webpack -p --config webpack.prod.js --progress",
     "build:dev": "webpack --config webpack.config.js --progress",
     "logs": "heroku logs --app goodtimes-server --tail",
-    "test": "ts-node node_modules/jasmine/bin/jasmine --config=tests/jasmine.json"
+    "test": "ts-node node_modules/jasmine/bin/jasmine --config=tests/jasmine.json",
+    "postinstall": "patch-package"
   },
   "_moduleAliases": {
     "@shared": "dist/shared"
@@ -68,6 +69,7 @@
     "jsonfile": "^5.0.0",
     "nodemon": "^2.0.2",
     "nyc": "^15.0.0",
+    "patch-package": "^6.2.0",
     "supertest": "^4.0.2",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.6.2",
