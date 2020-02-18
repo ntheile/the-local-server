@@ -2,7 +2,7 @@
 import Model from 'radiks/lib/model';
 import { number, any, string } from 'prop-types';
 import Comment from './Comment';
-import { Attrs } from 'radiks/src/types';
+import { Attrs } from './Attrs';
 import { ACL } from './ACL';
 
 export let posts: any;

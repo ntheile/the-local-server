@@ -1,7 +1,7 @@
 // @ts-ignore
 import Model from 'radiks/lib/model';
 import moment from 'moment';
-import { Attrs } from 'radiks/src/types';
+import { Attrs } from './Attrs';
 
 export default class Message extends Model {
   static className = 'Message';

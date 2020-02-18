@@ -1,9 +1,9 @@
 import './LoadEnv'; // Must be the first import
 //import { logger } from '@shared';
 import 'localstorage-polyfill';
+// let jsdom = require('jsdom-global')( undefined, { url: process.env.RADIKS_API_SERVER });
 const Window = require('window');
 let window = new Window();
-import 'localstorage-polyfill';
 const fetch = require('node-fetch');
 // @ts-ignore
 global.window = window; // for radiks to work
@@ -15,7 +15,6 @@ import { Request, Response, Router } from 'express';
 import logger from 'morgan';
 import path from 'path';
 import BaseRouter from './routes';
-// @ts-ignore
 import { setup } from 'radiks-server';
 import { OK } from 'http-status-codes';
 import { PlaceInfoController } from './api/PlaceInfoController'

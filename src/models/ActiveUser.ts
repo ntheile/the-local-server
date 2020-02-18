@@ -1,6 +1,6 @@
 // @ts-ignore
 import Model from 'radiks/lib/model';
-import { Attrs } from 'radiks/src/types';
+import { Attrs } from './Attrs';
 import { ACL, acl } from './ACL';
 
 
