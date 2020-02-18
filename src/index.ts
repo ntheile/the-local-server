@@ -66,11 +66,9 @@ const server = app.listen(port, () => {
 // Setup the server
 setup().then( async ( RadiksController: any ) => {
    
-
     // setup database indexes
     mongoSetup(RadiksController)
     
-
     // setup Routes
     app.use('/radiks', RadiksController);
     app.use('/api', makeApiController(RadiksController.DB));
