@@ -1,14 +1,15 @@
 import './LoadEnv'; // Must be the first import
-//import { logger } from '@shared';
-import 'localstorage-polyfill';
-// let jsdom = require('jsdom-global')( undefined, { url: process.env.RADIKS_API_SERVER });
+
+// polyfills for radiks client
 const Window = require('window');
 let window = new Window();
-const fetch = require('node-fetch');
-// @ts-ignore
-global.window = window; // for radiks to work
-// @ts-ignore
-global.document = window.document; // for nextjs client side dom to work
+declare let global: any;
+global.window = window; 
+global.document = window.document;
+import 'localstorage-polyfill';
+import 'node-fetch';
+
+import { loadGroupMemberShipsFromMongoToLocalStorage  } from './utils/group';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import { Request, Response, Router } from 'express';
@@ -25,7 +26,7 @@ const { STREAM_CRAWL_EVENT } = require('radiks-server/app/lib/constants');
 import mongoSetup from './mongoSetup';
 import { PostsController } from './api/PostsController';
 import { PeopleController } from './api/PeopleController';
-import { loadGroupMemberShipsFromMongoToLocalStorage  } from './utils/group';
+
 
 // Init express and socket.io
 const app = express();
@@ -120,5 +121,7 @@ setup().then( async ( RadiksController: any ) => {
    
     
 });
+
+
 
 export default app;
