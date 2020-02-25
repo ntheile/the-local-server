@@ -39,8 +39,8 @@ export class Post extends Model {
       decrypted: true
     },
     content : {
-      type: string,
-      decrypted: true
+      type: string
+      // decrypted: true
     },
     tags: {
       type: Array,
@@ -69,6 +69,10 @@ export class Post extends Model {
     clientGuid: {
       type: string,
       decrypted: true
+    },
+    userGroupId: {
+      type: String,
+      decrypted: true,
     }
   };
   
@@ -101,6 +105,7 @@ export interface IPost extends Attrs {
   hashtagColor: string;
   time: string;
   pullRight: boolean;
-  acl: ACL // access control level
+  acl: ACL, // access control level
+  userGroupId?: string;
 }
 

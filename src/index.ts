@@ -26,7 +26,7 @@ const { STREAM_CRAWL_EVENT } = require('radiks-server/app/lib/constants');
 import mongoSetup from './mongoSetup';
 import { PostsController } from './api/PostsController';
 import { PeopleController } from './api/PeopleController';
-
+import { IActiveUser } from './models/ActiveUser';
 
 // Init express and socket.io
 const app = express();
@@ -99,6 +99,9 @@ setup().then( async ( RadiksController: any ) => {
         if (attrs.geohash){
           let room = attrs.geohash;
           io.in(room).emit('message', attrs);
+        } else if ( attrs.radiksType == "ActiveUser" ) {
+          let room = (attrs as IActiveUser).acl.geohash;
+          io.in(room).emit('message', attrs);
         }
     });
 
@@ -113,10 +116,10 @@ setup().then( async ( RadiksController: any ) => {
         PlaceController(io, socket, room, RadiksController, authToken)
       });
       // // broadcast room messages
-      socket.on('message', ({room, message}: any)  => {
-        message.radiksType = "Joiner";
-        io.in(room).emit('message', message);
-      });
+      // socket.on('message', ({room, message}: any)  => {
+      //   message.radiksType = "Joiner";
+      //   io.in(room).emit('message', message);
+      // });
     });
    
     

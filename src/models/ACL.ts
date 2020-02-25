@@ -7,10 +7,10 @@ export interface ACL {
   geohash: string;
 }
   
-export let acl: ACL = {
-  distance : 1000,
-  location : [43, 12],
-  readers: ['*'],
-  expires: 123245,
-  geohash: 'a'
-}
+// export let acl: ACL = {
+//   distance : 1000,
+//   location : [43, 12],
+//   readers: ['*'],
+//   expires: 123245,
+//   geohash: 'a'
+// }
