@@ -36,7 +36,7 @@
     "module-alias": "^2.2.2",
     "moment": "^2.22.2",
     "morgan": "^1.9.1",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "nodelist-foreach-polyfill": "^1.2.0",
     "prop-types": "^15.7.2",
     "radiks": "^0.2.2-beta.1",
