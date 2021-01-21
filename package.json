@@ -42,7 +42,7 @@
     "radiks": "^0.2.2-beta.1",
     "radiks-server": "^0.3.0-beta.1",
     "regex": "^0.1.1",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "tslib": "^1.10.0",
     "window": "^4.2.6",
     "winston": "^3.2.1",
